@@ -258,13 +258,16 @@ func arrayToString(a []int, delim string) string {
 func (service *StoryService) GetBulk(projectId int, storyIds []int) ([]Story, *http.Response, error) {
 	u := fmt.Sprintf("projects/%v/stories/bulk", projectId)
 	stories := arrayToString(storyIds, ",")
-	fmt.Println("Bulk getting stories: ", storyIds)
+	fmt.Println("Bulk getting stories: ", stories)
+
 	if stories != "" {
 		u += "?ids=" + url.QueryEscape(stories)
 	}
+	fmt.Println("url: ", u)
 
 	req, err := service.client.NewRequest("GET", u, nil)
 	if err != nil {
+		fmt.Println("GetBulk Error: ", err)
 		return nil, nil, err
 	}
 
