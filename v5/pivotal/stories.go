@@ -251,28 +251,23 @@ func (service *StoryService) Get(projectId, storyId int) (*Story, *http.Response
 
 func arrayToString(a []int, delim string) string {
 	return strings.Trim(strings.Replace(fmt.Sprint(a), " ", delim, -1), "[]")
-	//return strings.Trim(strings.Join(strings.Split(fmt.Sprint(a), " "), delim), "[]")
-	//return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(a)), delim), "[]")
 }
 
 func (service *StoryService) GetBulk(projectId int, storyIds []int) ([]Story, *http.Response, error) {
 	u := fmt.Sprintf("projects/%v/stories/bulk", projectId)
 	stories := arrayToString(storyIds, ",")
-	fmt.Println("Bulk getting stories: ", stories)
 
 	if stories != "" {
 		u += "?ids=" + url.QueryEscape(stories)
 	}
-	fmt.Println("url: ", u)
 
 	req, err := service.client.NewRequest("GET", u, nil)
 	if err != nil {
-		fmt.Println("GetBulk Error: ", err)
 		return nil, nil, err
 	}
 
 	var bulkStories []Story
-	resp, err := service.client.Do(req, bulkStories)
+	resp, err := service.client.Do(req, &bulkStories)
 	if err != nil {
 		return nil, resp, err
 	}
