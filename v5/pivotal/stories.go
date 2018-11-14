@@ -10,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -246,6 +247,34 @@ func (service *StoryService) Get(projectId, storyId int) (*Story, *http.Response
 	}
 
 	return &story, resp, err
+}
+
+func arrayToString(a []int, delim string) string {
+	return strings.Trim(strings.Replace(fmt.Sprint(a), " ", delim, -1), "[]")
+	//return strings.Trim(strings.Join(strings.Split(fmt.Sprint(a), " "), delim), "[]")
+	//return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(a)), delim), "[]")
+}
+
+func (service *StoryService) GetBulk(projectId, storyIds []int) ([]Story, *http.Response, error) {
+	u := fmt.Sprintf("projects/%v/stories/bulk", projectId)
+	stories := arrayToString(storyIds, ",")
+	fmt.Println("Bulk getting stories: ", storyIds)
+	if stories != "" {
+		u += "?ids=" + url.QueryEscape(stories)
+	}
+
+	req, err := service.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var bulkStories []Story
+	resp, err := service.client.Do(req, bulkStories)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return bulkStories, resp, err
 }
 
 func (service *StoryService) Update(projectId, storyId int, story *StoryRequest) (*Story, *http.Response, error) {
