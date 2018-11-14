@@ -255,7 +255,7 @@ func arrayToString(a []int, delim string) string {
 	//return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(a)), delim), "[]")
 }
 
-func (service *StoryService) GetBulk(projectId, storyIds []int) ([]Story, *http.Response, error) {
+func (service *StoryService) GetBulk(projectId int, storyIds []int) ([]Story, *http.Response, error) {
 	u := fmt.Sprintf("projects/%v/stories/bulk", projectId)
 	stories := arrayToString(storyIds, ",")
 	fmt.Println("Bulk getting stories: ", storyIds)
