@@ -253,7 +253,7 @@ func arrayToString(a []int, delim string) string {
 	return strings.Trim(strings.Replace(fmt.Sprint(a), " ", delim, -1), "[]")
 }
 
-func (service *StoryService) GetBulk(projectId int, storyIds []int) ([]Story, *http.Response, error) {
+func (service *StoryService) GetBulk(projectId int, storyIds []int) ([]*Story, *http.Response, error) {
 	u := fmt.Sprintf("projects/%v/stories/bulk", projectId)
 	stories := arrayToString(storyIds, ",")
 
@@ -266,7 +266,7 @@ func (service *StoryService) GetBulk(projectId int, storyIds []int) ([]Story, *h
 		return nil, nil, err
 	}
 
-	var bulkStories []Story
+	var bulkStories []*Story
 	resp, err := service.client.Do(req, &bulkStories)
 	if err != nil {
 		return nil, resp, err
