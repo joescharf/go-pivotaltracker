@@ -278,11 +278,6 @@ func (service *StoryService) Get(projectID, storyID int) (*Story, *http.Response
 	return &story, resp, err
 }
 
-<<<<<<< HEAD
-// Update will change details of an existing story.
-func (service *StoryService) Update(projectID, storyID int, story *StoryRequest) (*Story, *http.Response, error) {
-	u := fmt.Sprintf("projects/%v/stories/%v", projectID, storyID)
-=======
 func arrayToString(a []int, delim string) string {
 	return strings.Trim(strings.Replace(fmt.Sprint(a), " ", delim, -1), "[]")
 }
@@ -309,9 +304,10 @@ func (service *StoryService) GetBulk(projectId int, storyIds []int) ([]*Story, *
 	return bulkStories, resp, err
 }
 
-func (service *StoryService) Update(projectId, storyId int, story *StoryRequest) (*Story, *http.Response, error) {
-	u := fmt.Sprintf("projects/%v/stories/%v", projectId, storyId)
->>>>>>> 7c4c2d828714750ca9a123a44413f810568d6bc7
+
+// Update will change details of an existing story.
+func (service *StoryService) Update(projectID, storyID int, story *StoryRequest) (*Story, *http.Response, error) {
+	u := fmt.Sprintf("projects/%v/stories/%v", projectID, storyID)
 	req, err := service.client.NewRequest("PUT", u, story)
 	if err != nil {
 		return nil, nil, err
