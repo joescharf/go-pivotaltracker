@@ -10,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -277,9 +278,40 @@ func (service *StoryService) Get(projectID, storyID int) (*Story, *http.Response
 	return &story, resp, err
 }
 
+<<<<<<< HEAD
 // Update will change details of an existing story.
 func (service *StoryService) Update(projectID, storyID int, story *StoryRequest) (*Story, *http.Response, error) {
 	u := fmt.Sprintf("projects/%v/stories/%v", projectID, storyID)
+=======
+func arrayToString(a []int, delim string) string {
+	return strings.Trim(strings.Replace(fmt.Sprint(a), " ", delim, -1), "[]")
+}
+
+func (service *StoryService) GetBulk(projectId int, storyIds []int) ([]*Story, *http.Response, error) {
+	u := fmt.Sprintf("projects/%v/stories/bulk", projectId)
+	stories := arrayToString(storyIds, ",")
+
+	if stories != "" {
+		u += "?ids=" + url.QueryEscape(stories)
+	}
+
+	req, err := service.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var bulkStories []*Story
+	resp, err := service.client.Do(req, &bulkStories)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return bulkStories, resp, err
+}
+
+func (service *StoryService) Update(projectId, storyId int, story *StoryRequest) (*Story, *http.Response, error) {
+	u := fmt.Sprintf("projects/%v/stories/%v", projectId, storyId)
+>>>>>>> 7c4c2d828714750ca9a123a44413f810568d6bc7
 	req, err := service.client.NewRequest("PUT", u, story)
 	if err != nil {
 		return nil, nil, err
